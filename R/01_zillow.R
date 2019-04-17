@@ -33,3 +33,12 @@ test$SalePrice <- NA
 
 all <- rbind(train,test)
 dim(all)
+
+
+# Exploring Variables -----------------------------------------------------
+
+##visualizing the response variable (SalesPrice)
+
+ggplot(data = all[!is.na(all$SalePrice),],aes(x = SalePrice)) + 
+        geom_histogram( fill = "blue", binwidth = 10000) + 
+        scale_x_continuous(breaks  = seq(0,800000, by = 100000), labels = comma)
