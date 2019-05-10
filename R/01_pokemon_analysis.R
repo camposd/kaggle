@@ -53,11 +53,11 @@ ggplot(types, aes(Type.1, Type.2)) +
 
 #22. Generating histograms to represent distribution of variuos attributes
 
-pokemon_stats
+
 
 pokemon_stats <- names(pokemon)[5:11]
 pokeGram <- function(attack_attribute){
-        ggplot(pokemon, aes_string(x = attack_attribute)) + 
+        ggplot(pokemon, aes_string(x = attack_attribute)) + #aes_string is coool!!
                 geom_histogram(binwidth = 4, 
                                fill = "palegreen", 
                                colour = "black") + 
@@ -70,4 +70,57 @@ plots <- map(.x = pokemon_stats,
     .f = ~ pokeGram(.))
 
 
+## study grid arrange
+grid.arrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]], 
+             plots[[5]], plots[[6]], plots[[7]],
+             layout_matrix = cbind(c(1,4,7), c(2,5,7), c(3,6,7)))
+
+
+
+p13 <- ggplot(pokemon, aes(x=Speed, fill=Legendary)) +
+        geom_density(alpha=0.5) +
+        labs(x="Speed", y ="Density") +
+        theme_bw() +
+        theme(legend.position="none")
+
+
+pokeDensityPlot <- function(attack_attribute){
+        ggplot(pokemon, aes_string(x = attack_attribute)) + 
+                geom_density( alpha = 0.5) + 
+                labs( x = as.character(attack_attribute),
+                      y = "Density") + 
+                theme_bw() + 
+                theme(legend.position = "none")
+}
+
+density_plots <- map(.x = pokemon_stats, 
+                     .f = ~ pokeDensityPlot(.))
+density_plots
+
+#box plot of defensive attributes
+
+ggplot(pokemon %>% group_by(Type.1) %>% mutate(med = median(Sp..Def)), 
+       aes(x = reorder(Type.1, Sp..Def, FUN = median), y = Sp..Def)) + 
+        geom_boxplot(aes(fill = med)) + 
+        scale_fill_gradient(low = "paleturquoise", 
+                            high = "paleturquoise4") + 
+        coord_flip() + 
+        labs(x = "Type 1",
+             title = "Boxplot of Special Defense") + 
+        theme_bw() + 
+        theme(legend.position = "none")
+
+##boxplot of HP
+
+ggplot(pokemon %>% group_by(Type.1) %>% mutate(med = median(HP)), 
+       aes(x = reorder(Type.1, HP, FUN = median), y = HP)) + 
+        geom_boxplot(aes(fill = med)) + 
+        scale_fill_gradient(low = "paleturquoise",
+                            high = "paleturquoise4") + 
+        coord_flip() + 
+        labs(x = "Type 1",
+             title = "Boxplot of Special Defense") + 
+        theme_bw() + 
+        theme(legend.position = "none")
+        
 
