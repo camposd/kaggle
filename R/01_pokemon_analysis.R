@@ -122,5 +122,119 @@ ggplot(pokemon %>% group_by(Type.1) %>% mutate(med = median(HP)),
              title = "Boxplot of Special Defense") + 
         theme_bw() + 
         theme(legend.position = "none")
+
+## box plot of attack
+ggplot(pokemon %>% group_by(Type.1) %>% mutate(med = median(Attack)),
+       aes(x = reorder(Type.1, Attack, FN = median), y = Attack)) + 
+        geom_boxplot(aes(fill = med)) + 
+        scale_fill_gradient(low = "paleturquoise", 
+                            high = "paleturquoise4") + 
+        coord_flip() + 
+        labs(title = "Boxplot of Attack", 
+             x = "Attack", 
+             y = "Type 1") + 
+        theme_bw() + 
+        theme(legend.position = "none")
         
 
+# boxplot of defense
+ggplot(pokemon %>% group_by(Type.1) %>% mutate(med = median(Defense)),
+       aes(x = reorder(Type.1, Defense, FUN = median), y = Defense)) + 
+        geom_boxplot(aes(fill = med)) + 
+        scale_fill_gradient(low = "paleturquoise", 
+                            high = "paleturquoise4") + 
+        coord_flip() + 
+        labs(x = "Defense", 
+             y = "Type 1", 
+             title = "Boxplot of Defense") + 
+        theme_bw() + 
+        theme(legend.position = "none")
+## Boxplot of Special attack
+ggplot(pokemon %>% group_by(Type.1) %>% mutate(med = median(Sp..Atk)),
+       aes(x = reorder(Type.1, Sp..Atk, FUN = median), y = Sp..Atk)) + 
+        geom_boxplot(aes(fill = med)) + 
+        scale_fill_gradient(low = 'paleturquoise', 
+                            high = 'paleturquoise4') + 
+        coord_flip() + 
+        labs(x = 'Special Attack', 
+             y = "Type 1", 
+             title = "Boxplot of Special Attack") + 
+        theme_bw() + 
+        theme(legend.position = "none")
+
+## doing some density plots
+ggplot(pokemon, aes(x = Total)) + 
+        geom_density(alpha = 0.5, aes(fill = Type.1)) + 
+        facet_wrap(~Type.1) + 
+        labs(x = "Total", 
+             y = "Density") + 
+        theme_bw() + 
+        theme(axis.text.x = element_blank(),
+              axis.ticks.x = element_blank(), 
+              legend.position = "none")g
+
+pokemon %>%
+        group_by(Generation) %>% 
+        summarize(Total = mean(Total)) %>% 
+        ggplot(aes(x = Generation, y = Total, group = 1)) + 
+        geom_line(colour = "red") + 
+        geom_point() + 
+        labs( x = "generation", 
+              y = "Average Total", 
+              title = "Average Total for each generation") + 
+        theme_bw() + 
+        theme(legend.position = "none")
+
+pokemon %>%
+        group_by(Generation) %>% 
+        summarize(HP = mean(HP),
+                  Attack = mean(Attack),
+                  Defense = mean(Defense),
+                  Special_attack = mean(Sp..Atk),
+                  Special_defense = mean(Sp..Def),
+                  Speed = mean(Speed)) %>% 
+        gather(Stats, value, 2:7) %>% 
+        ggplot(aes(Generation, y = value, group = 1)) + 
+        geom_line(colour = "red") + 
+        geom_point() + 
+        facet_wrap(~Stats) + 
+        labs(y = "Aerage Stats") + 
+        theme_bw()
+
+#number of each pokemon by generatio
+pokemon %>% 
+        count(Generation) %>% 
+        ggplot(aes(x = Generation, y = n)) + 
+        geom_bar(stat = 'identity',
+                 fill = 'lavender',
+                 colour = 'black') +
+        geom_label(aes(label = n)) + 
+        labs(x = "Generation", 
+             y = "Number of Pokemon", 
+             title = "Number of Pokemon per generation") + 
+        theme_bw()
+
+##how many pokemon of each primary type there are per generation
+pokemon %>% 
+        group_by(Generation) %>% 
+        count(Type.1) 
+
+## did not work appropriately ?
+ggplot(pokemon, aes(x=Type.1, fill=Generation)) + 
+        geom_bar() +
+        labs(x="Generation", y="Number of Pokémon",
+             title="Number of Pokémon of each primary type per generation") +
+        theme_bw() +
+        theme(axis.text.x=element_text(angle=45, hjust=1))
+
+#How many Legendary Pokemon are there in relation to all the other pokemon in the datast?
+table(pokemon$Legendary)
+
+#Whcih Generation has more legendary pokemon
+
+ggplot(pokemon, aes(x = Generation, fill = Legendary)) + 
+        geom_bar(position = 'dodge') + 
+        labs(x = "Generation", 
+             y = "Number of Pokemon", 
+             title = "Number of Legendary Pokemon per generation") + 
+        theme_bw() 
