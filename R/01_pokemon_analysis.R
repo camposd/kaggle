@@ -39,7 +39,7 @@ ggplot(pokemon, aes(x = fct_infreq(Type.2))) +
 #counts of each type of combination
 types <-  pokemon %>% 
         group_by(Type.1, Type.2) %>% 
-        summarize(count = n())
+        dplyr::summarize(count = n())
 
 # creating a nice contingency table
 ggplot(types, aes(Type.1, Type.2)) + 
